@@ -1,0 +1,30 @@
+using UnityEngine;
+public class IdleState : PlayerState
+{
+    public IdleState(PlayerController playerController) : base(playerController) { }
+    public override void Enter()
+    {
+        _player.Animator.SetBool("IsIdle", true);
+    }
+
+    public override void Update()
+    {
+        if (Input.GetAxisRaw("Horizontal") != 0)
+        {
+            _player.ChangeState(new WalkState(_player));
+        }
+        else if (Input.GetButtonDown("Jump"))
+        {
+            _player.ChangeState(new JumpState(_player));
+        }
+        else if (Input.GetButton("Run"))
+        {
+            _player.ChangeState(new RunState(_player));
+        }
+    }
+
+    public override void Exit()
+    {
+        _player.Animator.SetBool("IsIdle", false);
+    }
+}
