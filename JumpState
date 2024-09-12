@@ -1,0 +1,31 @@
+using UnityEngine;
+
+public class JumpState : PlayerState
+{
+    public JumpState(PlayerController playerController) : base(playerController) { }
+
+    public override void Enter()
+    {
+        _player.Animator.SetTrigger("Jump");
+        _player.Jump();
+    }
+
+    public override void Update()
+    {
+        _player.Move(_player.WalkSpeed);
+
+        if (_player.IsGrounded())
+        {
+            if (Input.GetAxisRaw("Horizontal") != 0)
+            {
+                _player.ChangeState(new WalkState(_player));
+            }
+            else
+            {
+                _player.ChangeState(new IdleState(_player));
+            }
+        }
+    }
+
+    public override void Exit() { }
+}
