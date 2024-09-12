@@ -2,6 +2,7 @@ using UnityEngine;
 public class IdleState : PlayerState
 {
     public IdleState(PlayerController playerController) : base(playerController) { }
+
     public override void Enter()
     {
         _player.Animator.SetBool("IsIdle", true);
