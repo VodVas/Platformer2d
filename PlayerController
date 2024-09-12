@@ -1,0 +1,68 @@
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    private PlayerState _currentState;
+    private bool _isGrounded;
+    private float _minYVelocity = 0.01f;
+
+    [field: SerializeField] public float WalkSpeed { get; private set; } = 5f;
+    [field: SerializeField] public float RunSpeed { get; private set; } = 10f;
+    [field: SerializeField] public float JumpForce { get; private set; } = 3f;
+
+    public Rigidbody2D Rigidbody { get; private set; }
+    public Animator Animator { get; private set; }
+
+    private void Start()
+    {
+        Rigidbody = GetComponent<Rigidbody2D>();
+        Animator = GetComponent<Animator>();
+
+        ChangeState(new IdleState(this));
+    }
+
+    private void Update()
+    {
+        _isGrounded = Mathf.Abs(Rigidbody.linearVelocity.y) < _minYVelocity;
+
+        _currentState.Update();
+    }
+
+    public void ChangeState(PlayerState newState)
+    {
+        if (_currentState != null)
+        {
+            _currentState.Exit();
+        }
+
+        _currentState = newState;
+        _currentState.Enter();
+    }
+
+    public void Move(float speed)
+    {
+        float moveX = Input.GetAxisRaw("Horizontal");
+
+        Vector2 move = new Vector2(moveX * speed, Rigidbody.linearVelocity.y);
+
+        Rigidbody.linearVelocity = move;
+
+        if (moveX != 0)
+        {
+            transform.localScale = new Vector3(Mathf.Sign(moveX), 1, 1);
+        }
+    }
+
+    public void Jump()
+    {
+        if (_isGrounded)
+        {
+            Rigidbody.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+        }
+    }
+
+    public bool IsGrounded()
+    {
+        return _isGrounded;
+    }
+}
