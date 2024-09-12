@@ -1,0 +1,13 @@
+public abstract class PlayerState
+{
+    protected PlayerController _player;
+
+    public PlayerState(PlayerController playerController)
+    {
+        _player = playerController;
+    }
+
+    public abstract void Enter();
+    public abstract void Update();
+    public abstract void Exit();
+}
