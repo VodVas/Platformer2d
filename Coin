@@ -1,0 +1,19 @@
+using UnityEngine;
+
+public class Coin : MonoBehaviour
+{
+    private CoinSpawner _spawner;
+
+    public void Init(CoinSpawner spawner)
+    {
+        _spawner = spawner;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.TryGetComponent(out Player _))
+        {
+            _spawner.CollectCoin(this);
+        }
+    }
+}
