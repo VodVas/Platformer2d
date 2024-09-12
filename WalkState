@@ -1,0 +1,34 @@
+using UnityEngine;
+
+public class WalkState : PlayerState
+{
+    public WalkState(PlayerController playerController) : base(playerController) { }
+
+    public override void Enter()
+    {
+        _player.Animator.SetBool("IsWalking", true);
+    }
+
+    public override void Update()
+    {
+        _player.Move(_player.WalkSpeed);
+
+        if (Input.GetAxisRaw("Horizontal") == 0)
+        {
+            _player.ChangeState(new IdleState(_player));
+        }
+        else if (Input.GetButtonDown("Jump"))
+        {
+            _player.ChangeState(new JumpState(_player));
+        }
+        else if (Input.GetButton("Run"))
+        {
+            _player.ChangeState(new RunState(_player));
+        }
+    }
+
+    public override void Exit()
+    {
+        _player.Animator.SetBool("IsWalking", false);
+    }
+}
