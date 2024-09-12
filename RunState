@@ -1,0 +1,33 @@
+using UnityEngine;
+public class RunState : PlayerState
+{
+    public RunState(PlayerController playerController) : base(playerController) { }
+
+    public override void Enter()
+    {
+        _player.Animator.SetBool("IsRunning", true);
+    }
+
+    public override void Update()
+    {
+        _player.Move(_player.RunSpeed);
+
+        if (Input.GetAxisRaw("Horizontal") == 0)
+        {
+            _player.ChangeState(new IdleState(_player));
+        }
+        else if (Input.GetButtonDown("Jump"))
+        {
+            _player.ChangeState(new JumpState(_player));
+        }
+        else if (!Input.GetButton("Run"))
+        {
+            _player.ChangeState(new WalkState(_player));
+        }
+    }
+
+    public override void Exit()
+    {
+        _player.Animator.SetBool("IsRunning", false);
+    }
+}
