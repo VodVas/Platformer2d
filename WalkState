@@ -2,7 +2,17 @@ using UnityEngine;
 
 public class WalkState : PlayerState
 {
-    public WalkState(PlayerController playerController) : base(playerController) { }
+    private const string _horizontal = "Horizontal";
+    private const string _isWalking = "IsWalking";
+    private const string _jump = "Jump";
+    private const string _run = "Run";
+
+    private Move _move;
+
+    public WalkState(PlayerStateMachine playerController, Move move) : base(playerController)
+    {
+        _move = move;
+    }
 
     public override void Enter()
     {
@@ -11,24 +21,24 @@ public class WalkState : PlayerState
 
     public override void Update()
     {
-        _player.Move(_player.WalkSpeed);
+        _move.DoMove(_player.WalkSpeed);
 
-        if (Input.GetAxisRaw("Horizontal") == 0)
+        if (Input.GetAxisRaw(_horizontal) == 0)
         {
-            _player.ChangeState(new IdleState(_player));
+            _player.ChangeState(_player.IdleState);
         }
-        else if (Input.GetButtonDown("Jump"))
+        else if (Input.GetButtonDown(_jump))
         {
-            _player.ChangeState(new JumpState(_player));
+            _player.ChangeState(_player.JumpState);
         }
-        else if (Input.GetButton("Run"))
+        else if (Input.GetButton(_run))
         {
-            _player.ChangeState(new RunState(_player));
+            _player.ChangeState(_player.RunState);
         }
     }
 
     public override void Exit()
     {
-        _player.Animator.SetBool("IsWalking", false);
+        _player.Animator.SetBool(_isWalking, false);
     }
 }
