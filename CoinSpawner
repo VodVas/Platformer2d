@@ -40,18 +40,18 @@ public class CoinSpawner : MonoBehaviour
     {
         Coin coin = Instantiate(_coinPrefab);
 
-        coin.Init(this);
-
         return coin;
     }
 
     private void OnGetFromPool(Coin coin)
     {
+        coin.OnCoinCollected += CollectCoin;
         coin.gameObject.SetActive(true);
     }
 
     private void OnReleaseToPool(Coin coin)
     {
+        coin.OnCoinCollected -= CollectCoin;
         coin.gameObject.SetActive(false);
     }
 
