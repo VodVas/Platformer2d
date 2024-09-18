@@ -2,33 +2,43 @@ using UnityEngine;
 
 public class RunState : PlayerState
 {
-    public RunState(PlayerController playerController) : base(playerController) { }
+    private const string _horizontal = "Horizontal";
+    private const string _isRunning = "IsRunning";
+    private const string _jump = "Jump";
+    private const string _run = "Run";
+
+    private Move _move;
+
+    public RunState(PlayerStateMachine playerController, Move move) : base(playerController) 
+    {
+        _move = move;
+    }
 
     public override void Enter()
     {
-        _player.Animator.SetBool("IsRunning", true);
+        _player.Animator.SetBool(_isRunning, true);
     }
 
     public override void Update()
     {
-        _player.Move(_player.RunSpeed);
+        _move.DoMove(_player.RunSpeed);
 
-        if (Input.GetAxisRaw("Horizontal") == 0)
+        if (Input.GetAxisRaw(_horizontal) == 0)
         {
-            _player.ChangeState(new IdleState(_player));
+            _player.ChangeState(_player.IdleState);
         }
-        else if (Input.GetButtonDown("Jump"))
+        else if (Input.GetButtonDown(_jump))
         {
-            _player.ChangeState(new JumpState(_player));
+            _player.ChangeState(_player.JumpState);
         }
-        else if (!Input.GetButton("Run"))
+        else if (!Input.GetButton(_run))
         {
-            _player.ChangeState(new WalkState(_player));
+            _player.ChangeState(_player.WalkState);
         }
     }
 
     public override void Exit()
     {
-        _player.Animator.SetBool("IsRunning", false);
+        _player.Animator.SetBool(_isRunning, false);
     }
 }
